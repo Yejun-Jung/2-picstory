@@ -16,13 +16,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public Long Signup(@RequestBody SignupRequest request) {
+    public Long signup(@RequestBody SignupRequest request){
         return memberService.signup(
                 request.name(),
                 request.email(),
                 request.password(),
                 request.passwordConfirm(),
-                request.phone());
+                request.phone()
+                );
     }
 
     @GetMapping

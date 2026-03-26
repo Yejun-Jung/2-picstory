@@ -49,15 +49,15 @@ public class MemberService {
     public List<Member> findAll(){
         return memberRepository.findAll();
     }
-
     @Transactional(readOnly = true)
     public Member findById(Long id){
         return memberRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("회원이 존재하지 않습니다."));
     }
 
-    public void changeStatus(Long id, MemberStatus status){
-        Member member = findById(id);
+
+    public  void  changeStatus(Long id, MemberStatus status){
+        Member member =findById(id);
         member.changeStatus(status);
     }
 
@@ -65,4 +65,20 @@ public class MemberService {
         Member member = findById(id);
         member.changeStatus(MemberStatus.DELETED);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

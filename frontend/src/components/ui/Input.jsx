@@ -1,40 +1,39 @@
-import React from "react";
-import "./Input.scss";
-
-const Input = ({ 
-  type="text", 
-  placeholder, 
+import React from 'react'
+import './Input.scss'
+const Input = ({
+  lable,
+  type = "text",
+  placeholder,
   name,
-  value, 
-  onChange, 
-  onBlur, 
+  value,
+  onChange,
+  onBlur,
   error,
-  label,
   icon,
-  disabled=false,
-  className='',
-  ...props 
-}) => {
+  disabled = false,
+  className = '',
+  ...props
+}, ref) => {
   return (
-    <div className="input-group">
-      {label && <label className="input-label">{label}</label>}
+    <div className='input-group'>
+      {lable && <lable className="input-lable">{lable}</lable>}
       <div className="input-wrapper">
-        {icon && <span className="input-icon">{icon}</span>}
-        <input 
-          type={type} 
+        {icon && <span className='input-icon'>{icon}</span>}
+        <input
+          ref={ref}
+          type={type}
           name={name}
           value={value}
-          placeholder={placeholder} 
+          placeholder={placeholder}
           onChange={onChange}
-          onBlur={onBlur}
           disabled={disabled}
-          className="input-field"
-          {...props} 
-        />
+          className='input-field'
+          {...props}
+          />
       </div>
-      {error && <p className="input-error">{error}</p>}
+      {error && <p className='input-error'>{error}</p>}
     </div>
-  );
-};
+  )
+}
 
-export default Input;
+export default Input

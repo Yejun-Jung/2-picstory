@@ -2,7 +2,7 @@ import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import ProtectApp from './ProtectApp'
 import PublicLayout from './PublicLayout'
-import Landing from '../pages/Landing/Landing'
+import Landing from '../pages/landing/Landing'
 import Login from '../pages/auth/Login'
 import Signup from '../pages/auth/Signup'
 import Dashboard from '../pages/dashboard/Dashboard'
@@ -20,9 +20,9 @@ export const router = createBrowserRouter([
     // 보호영역
     path:'/app',
     element:(
-      <ProtectRoute>
+      // <ProtectRoute>
         <ProtectApp/>
-      </ProtectRoute>
+      // </ProtectRoute>
     ),
     children:[
       {

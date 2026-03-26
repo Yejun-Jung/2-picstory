@@ -1,8 +1,13 @@
 import React from 'react'
+import './Footer.scss'
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <footer>
+      <p>
+        © 2026 PhotoMemo · by JYJ
+      </p>
+    </footer>
   )
 }
 

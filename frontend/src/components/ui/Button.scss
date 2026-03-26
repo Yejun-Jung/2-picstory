@@ -22,7 +22,9 @@
     }
 
     &:hover {
+
         transform: translateX($btn-icon-move);
+
         img {
             transform: translateX($btn-icon-move);
         }
@@ -30,11 +32,26 @@
 
     &.intro {
         border: 1px solid $purple;
-        background: linear-gradient(90deg, $purple, $purple-2);
+        background: linear-gradient(90deg,
+                $purple,
+                $purple-2 );
 
         &:hover {
-            background: linear-gradient(0deg, $purple, $purple-2);
+            background: linear-gradient(-90deg,
+                    $purple,
+                    $purple-2 );
             box-shadow: $shadow-intro;
+
         }
+    }
+    &.primary {
+        background: linear-gradient(90deg,
+      $purple,
+      $purple-2 );
+      width: 100%;
+      &:hover {
+        transform: translateY(0);
+        box-shadow: $shadow-sm;
+      }
     }
 }

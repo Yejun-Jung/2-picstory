@@ -21,12 +21,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/members","/members/**").permitAll()
-                                .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/members","/members/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
 //                        .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form->form.disable())
                 .httpBasic(basic -> basic.disable());
@@ -42,16 +43,16 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(allowedOrigins));
 
-        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
 
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**",config);
 
-        return  source;
-
+        return source;
     }
+
 
 
 

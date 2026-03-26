@@ -1,7 +1,6 @@
 package picstory.backend.controller;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import picstory.backend.service.LoginService;
@@ -12,10 +11,11 @@ import picstory.backend.web.dto.MemberResponse;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final LoginService loginService;
+
+    private  final LoginService loginService;
     @PostMapping("/login")
     public MemberResponse login(@RequestBody LoginRequest request, HttpSession session){
-        return loginService.login(request, session);
+        return loginService.login(request,session);
     }
 
     @GetMapping("/me")

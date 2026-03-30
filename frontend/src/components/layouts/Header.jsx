@@ -2,20 +2,20 @@ import React from 'react'
 import './Header.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '../ui/Button'
-import { logout } from '@/api/auth.api'
+import { logout as logoutApi } from '@/api/auth.api'
 
 const Header = () => {
   const navigate = useNavigate()
 
   const menus = [
-    { name: '내 메모', link: '/app/memos' },
+    { name: '내 메모', link: '/app/posts/all' },
     { name: '내 프로필', link: '/app/profile' },
     { name: '설정', link: '/app/setting' }
   ]
 
   const handleLogout = async () => {
     try {
-      await logout()
+      await logoutApi()
       navigate("/")
     } catch (error) {
       alert(error.message || '로그아웃 오류')

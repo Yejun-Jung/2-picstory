@@ -3,10 +3,15 @@ import Button from '../../components/ui/Button'
 import './Auth.scss'
 import Input from '@/components/ui/Input'
 import { Link, useNavigate } from 'react-router-dom'
-import { login } from '@/api/auth.api'
+import { login as loginApi } from '@/api/auth.api'
+import { useAuth } from '../../store/auth.store'
 const Login = () => {
 
   const navigate = useNavigate()
+
+
+  const { login } = useAuth()
+
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -38,10 +43,12 @@ const Login = () => {
     try {
       setIsLoading(true)
       setError('')
-      await login({
+      const data =await loginApi({
         email: form.email.trim(),
         password: form.password
       })
+
+      login(data)
       navigate('/app')
 
     } catch (error) {
@@ -63,7 +70,8 @@ const Login = () => {
 
           <nav>
             <h2>로그인</h2>
-            <Button text="뒤로가기"
+            <Button
+              text="뒤로가기"
               backico='wh'
               className="back"
               onClick={handleBack} />
@@ -77,7 +85,7 @@ const Login = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="이메일을 입력하세요"
-                />
+              />
               <Input
                 name="password"
                 value={form.password}
@@ -90,7 +98,7 @@ const Login = () => {
               <Button text="로그인" type="submit" className="primary" />
             </div>
           </form>
-          {error && <p className='error-text'>{error}</p>}
+          {error && <p className='error-text'> {error}</p>}
           <div className="auth-now">
             <span>계정이 없으신가요?</span>
             <Link to="/signup">

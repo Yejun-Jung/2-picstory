@@ -1,31 +1,26 @@
 import client from './client'
 
-export const createPost = async(payload)=>{
-    const response = await client.post('/posts', payload)
-
+export const createPost = async (payload) => {
+    const response = await client.post('/post', payload)
     return response.data
 }
 
-export const getPosts = async()=>{
-    const response = await client.get('/posts')
-
+export const getPosts = async () => {
+    const response = await client.get('/post')
     return response.data
 }
 
-export const getPostById = async(id)=>{
-    const response = await client.get(`/posts'${id}`)
-
+export const getPostById = async (id) => {
+    const response = await client.get(`/post/${id}`)
     return response.data
 }
 
-export const updatePost = async(id, payload)=>{
-    const response = await client.patch(`/posts'${id}`, payload)
-
+export const updatePost = async (id, payload) => {
+    const response = await client.patch(`/post/${id}`, payload)
     return response.data
 }
 
-export const deletePost = async(id)=>{
-    const response = await client.delete(`/posts'${id}`)
-
+export const deletePost = async (id) => {
+    const response = await client.delete(`/post/${id}`)
     return response.data
 }

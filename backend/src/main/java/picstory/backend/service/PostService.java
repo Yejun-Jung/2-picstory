@@ -2,6 +2,7 @@ package picstory.backend.service;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import picstory.backend.domain.Member;
@@ -57,6 +58,27 @@ public class PostService {
         Post savePost = postRepository.save(post);
 
         return PostResponse.from(savePost);
+    }
+
+    @Transactional
+    public PostResponse findById(Long id, HttpSession session) {
+        if(id==null){
+            throw new IllegalArgumentException("게시글 id를 확인해주세요");
+        }
+
+        Long memberId = (Long)  session.getAttribute(LOGIN_MEMBER_ID);
+
+        if(memberId==null){
+            throw new IllegalArgumentException("로그인 후 이용해 주세요");
+        }
+        Post post = postRepository.findById(id)
+                .orElseThrow(()->new IllegalIdentifierException("게시글을 찾을 수 없습니다"));
+
+        if(!post.getMember().getId().equals(memberId)){
+            throw new IllegalIdentifierException("본인이 작성한 글만 조회할 수 있습니다.");
+        }
+
+        return PostResponse.from(post);
     }
 
     @Transactional

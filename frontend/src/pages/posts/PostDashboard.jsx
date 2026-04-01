@@ -29,12 +29,12 @@ const PostDashboard = () => {
           title: post.title,
           content: post.content,
           tags: post.tags || [],
-          thumbnail: post.imageUrl || ''
+          thumbnail: post.imageUrl || "",
         }));
 
         setposts(mappedPosts);
       } catch (error) {
-        console.error('게시글 조회 실패', error);
+        console.error("게시글 조회 실패", error);
         setposts([]);
       }
     };
@@ -59,13 +59,19 @@ const PostDashboard = () => {
 
   const handleCreatePost = () => {
     console.log("새 메모 작성");
-    navigate('/app/posts/new')
+    navigate("/app/posts/new");
   };
 
   return (
     <section className="page post-section">
       <div className="inner">
-        <PostHeader onCreate={handleCreatePost} />
+        <PostHeader
+          onClick={handleCreatePost}
+          title="게시글을 작성하세요"
+          showButton
+          buttonText="작성하기"
+          buttonClass="primary"
+        />
         <div className="input-post">
           <Input
             placeholder="게시글 제목 또는 내용을 검색하세요"

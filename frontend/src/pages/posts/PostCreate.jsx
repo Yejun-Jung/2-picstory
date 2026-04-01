@@ -6,19 +6,74 @@ import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import { CATEGORY_OPTIONS } from "../../constants/category";
 import PostTag from "../../components/posts/PostTag";
+import { createPost } from "@/api/post.api";
 
 const PostCreate = () => {
+  const navigate = useNavigate();
+
+  const [category, setCategory] = useState("DAILY");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([
+    { label: "기본값" },
+    { label: "추가 태그" },
+  ]);
+  const fileInputRef = useRef(null);
+  const [tagInput, setTagInput] = useState("");
+  const [isAddingTag, setIsAddingTag] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    
+    if (!title.trim()) {
+      alert("제목을 입력하세요");
+      return;
+    }
+    if (!content.trim()) {
+      alert("내용을 입력하세요");
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
+      const payload = {
+        category,
+        title,
+        content,
+      };
+
+      await createPost(payload);
+      alert("게시글이 저장되었습니다.");
+      navigate("/app");
+    } catch (error) {
+      console.error("게시글 저장 실패", error);
+      alert(error.message || "저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleGoBack = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(-1);
+  };
+
   return (
     <section className="page post-section post-create">
       <div className="inner">
-        {/* 수정 포인트 1: form에 클래스 추가 */}
-        <form className="post-form">
-          {/* 수정 포인트 2: 이제 .post-card가 .post-form 내부에 있으므로 스타일이 적용됨 */}
+        <form className="post-form" onSubmit={handleSave}>
           <div className="post-card">
             <div className="post-field">
               <label className="post-label">카테고리</label>
               <div className="post-input-wrap">
-                <select>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
                   {CATEGORY_OPTIONS.map((opt) => (
                     <option value={opt.value} key={opt.value}>
                       {opt.label}
@@ -28,7 +83,13 @@ const PostCreate = () => {
               </div>
             </div>
 
-            <Input label="제목" name="title" placeholder="제목을 입력하세요" />
+            <Input
+              label="제목"
+              name="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="제목을 입력하세요"
+            />
 
             <div className="post-tag-box">
               <div className="tags">
@@ -50,6 +111,8 @@ const PostCreate = () => {
               <label className="post-label">내용</label>
               <div className="post-input-wrap">
                 <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                   className="post-textarea"
                   placeholder="내용을 자유롭게 입력하세요"
                 />
@@ -62,8 +125,8 @@ const PostCreate = () => {
                   type="file"
                   accept="image/*"
                   className="post-uppload-input"
+                  ref={fileInputRef}
                 />
-                <img src="" alt="img" />
                 <p className="post-upload-title">이미지를 업로드 하세요</p>
                 <span className="post-upload-desc">
                   클릭하거나 파일을 드래그 하여 업로드
@@ -72,8 +135,19 @@ const PostCreate = () => {
             </div>
 
             <div className="post-actions">
-              <Button type="button" text="취소하기" className="cancel" />
-              <Button type="submit" text="저장하기" className="save" />
+              <button
+                type="button"
+                className="btn cancel"
+                onClick={handleGoBack}
+              >
+                취소하기
+              </button>
+              <Button 
+                type="submit" 
+                text={isSaving ? "저장 중..." : "저장하기"} 
+                className="save" 
+                disabled={isSaving}
+              />
             </div>
           </div>
         </form>

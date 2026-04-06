@@ -76,7 +76,7 @@ const PostDetail = () => {
 
             {/* 이미지가 카드 내부에 포함되는 디자인이라면 여기로 이동 */}
             <div className="img-wrap">
-              <img src="/images.png" alt="image" />
+              <img src={post.imageUrl} alt="image" />
             </div>
           </article>
         </div>

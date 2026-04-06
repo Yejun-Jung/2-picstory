@@ -10,16 +10,19 @@ public record PostResponse(
         PostCategory category,
         String title,
         String content,
+        String imageUrl,
         Long memberId,
         String memberName,
         LocalDateTime createdAt
 ) {
-    public static PostResponse from (Post post){
-        return new PostResponse(
+
+    public static PostResponse from(Post post){
+        return  new PostResponse(
                 post.getId(),
                 post.getCategory(),
                 post.getTitle(),
                 post.getContent(),
+                post.getImageUrl(),
                 post.getMember().getId(),
                 post.getMember().getName(),
                 post.getCreatedAt()

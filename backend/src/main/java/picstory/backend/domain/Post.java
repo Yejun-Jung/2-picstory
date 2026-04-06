@@ -21,14 +21,17 @@ public class Post {
     private PostCategory category;
 
 
-    @Column(nullable = false,length = 100)
+    @Column(nullable = false, length = 100)
     private String title;
 
 
-    @Column(nullable = false,length = 2000)
+    @Column(nullable = false, length = 2000)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @Column(length = 500)
+    private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -39,19 +42,21 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    public Post(PostCategory category, String title, String content, Member member) {
-        this.category=category;
-        this.title=title;
-        this.content=content;
-        this.member=member;
+    public Post(PostCategory category, String title, String content, String imageUrl, Member member) {
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.member = member;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(PostCategory category, String title, String content) {
-        this.category=category;
-        this.title=title;
-        this.content=content;
+    public void update(PostCategory category, String title, String content, String imageUrl) {
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
         this.updatedAt = LocalDateTime.now();
     }
 

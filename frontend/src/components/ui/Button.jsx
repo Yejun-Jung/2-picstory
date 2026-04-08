@@ -1,21 +1,30 @@
 import React from 'react'
 import './Button.scss'
 const Button = ({
+  type="button",
   text,
   className,
   onClick,
-  backico='',
-  icons}) => {
-    const backIconSrc=
-    backico=='wh'?"/images/arrow-back-wh.svg":
-    backico=='bh'?"/images/arrow-back.svg" : null
+  backico = '',
+  disabled = false,
+  icons }) => {
+
+  const backIconSrc =
+    backico == 'wh' ? "/images/arrow-back-wh.svg" :
+      backico == 'bh' ? "/images/arrow-back.svg" : null
 
 
   return (
-    <button onClick={onClick} className={`btn ${className}`}>
-      {backIconSrc && <img src={backIconSrc}/>}
+    <button
+    type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`btn ${className}`}>
+      {
+        backIconSrc && <img src={backIconSrc} />
+      }
       {text}
-      {icons && <img src='/images/arrow.svg'/>}
+      {icons && <img src='/images/arrow.svg' />}
     </button>
   )
 }

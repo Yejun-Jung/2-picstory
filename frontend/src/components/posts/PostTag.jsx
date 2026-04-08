@@ -1,12 +1,19 @@
 import React from 'react'
 
-const PostTag = ({tag}) => {
+const PostTag = ({ tag ,onClick}) => {
   return (
     <span className='post-tag'>
-        <span>
+      <span>
+
         {tag}
-        </span>
-        <button className='post-tag-delete'>X</button>
+      </span>
+      <button 
+      className='post-tag-delete' 
+      onClick={(e)=>{
+        e.preventDefault()
+        e.stopPropagation()
+        onClick?.()
+        }}>X</button>
     </span>
   )
 }

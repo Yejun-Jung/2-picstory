@@ -4,8 +4,8 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import './Auth.scss'
 import { signup } from '@/api/auth.api'
-
 const Signup = () => {
+
   const navigate = useNavigate()
 
   const [error, setError] = useState('')
@@ -41,10 +41,10 @@ const Signup = () => {
       return '비밀번호를 6자 이상 입력하세요'
     }
     if (!form.passwordConfirm.trim()) {
-      return '비밀번호 확인을 입력하세요'
+      return '비밀번호를 확인을 입력하세요'
     }
     if (form.password !== form.passwordConfirm) {
-      return '비밀번호와 비밀번호 확인이 일치하지 않습니다.'
+      return '비밀번호를 비밀번호 확인이 일치하지 않습니다.'
     }
     if (!form.phone.trim()) {
       return '전화번호를 입력하세요'
@@ -60,6 +60,7 @@ const Signup = () => {
 
     if (validationMessage) {
       setError(validationMessage)
+
       return
     }
 
@@ -70,60 +71,60 @@ const Signup = () => {
       alert('회원가입이 완료되었습니다.')
       navigate('/login')
     } catch (error) {
-      setError(error.message || '회원 가입 중 오류가 발생했습니다.')
+      setError(error.message || '회원 가입중 오류가 발생했습니다.')
     } finally {
       setIsLoading(false)
     }
   }
 
+
   const handleBack = () => {
     navigate(-1)
   }
-
   return (
     <section className='auth'>
       <div className="inner">
         <div className="auth-box">
+
           <nav>
             <h2>회원가입</h2>
-            <Button 
-              text="뒤로가기"
+            <Button text="뒤로가기"
               className="back"
               icons
-              onClick={handleBack} 
-            />
+              onClick={handleBack} />
           </nav>
         </div>
         <form className='auth-form' onSubmit={handleSubmit}>
           <div className="form-group">
+
             <Input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
               placeholder="이름을 입력하세요"
-            />
+              />
             <Input
               type="email"
               name="email"
               onChange={handleChange}
               value={form.email}
               placeholder="이메일을 입력하세요"
-            />
+              />
             <Input
               name="password"
               value={form.password}
               onChange={handleChange}
               type="password"
               placeholder="비밀번호를 입력하세요"
-            />
+              />
             <Input
               name="passwordConfirm"
               onChange={handleChange}
               value={form.passwordConfirm}
               type="password"
               placeholder="비밀번호를 다시 입력하세요"
-            />
+              />
             <Input
               name="phone"
               onChange={handleChange}
@@ -132,14 +133,12 @@ const Signup = () => {
               placeholder="전화번호를 입력하세요"
             />
           </div>
-          {error && <p className='error-text'>{error}</p>}
+          {error && <p className='error-text'> {error}</p>}
           <div className="auth-btn-wrap">
             <Button 
-              text={isLoading ? "가입 중..." : "회원가입"} 
-              type="submit" 
-              className="primary" 
-              disabled={isLoading}
-            />
+            text={isLoading? "가입 중...":"회원가입"} 
+            type="submit" 
+            className="primary" />
           </div>
         </form>
         <div className="auth-now">

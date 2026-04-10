@@ -5,8 +5,8 @@ import PostTag from '@/components/posts/PostTag'
 import './PostPagesAll.scss'
 import { useNavigate, useParams } from 'react-router-dom'
 import PostHeader from '@/components/posts/PostHeader'
-
 const PostDetail = () => {
+
   const { id } = useParams()
   const navigate = useNavigate()
   const [post, setPost] = useState(null)
@@ -20,7 +20,11 @@ const PostDetail = () => {
     const fetchPost = async () => {
       try {
         const data = await getPostById(Number(id))
-        setPost({ ...data })
+
+        console.log(data)
+        setPost({
+          ...data
+        })
       } catch (error) {
         console.error(error)
       } finally {
@@ -30,8 +34,11 @@ const PostDetail = () => {
     fetchPost()
   }, [id])
 
+  if (loading) return <div>로딩중</div>
+  if (!post) return <div>데이터 없음</div>
+
   const handlePostDelete = async () => {
-    if (window.confirm('게시글을 정말 삭제하시겠습니까?')) {
+    if (confirm('게시글을 정말 삭제하시겠습니까?')) {
       try {
         await deletePost(id)
         navigate('/app', { replace: true })
@@ -41,8 +48,6 @@ const PostDetail = () => {
     }
   }
 
-  if (loading) return <div>로딩중</div>
-  if (!post) return <div>데이터 없음</div>
 
   return (
     <section className='page post-section post-detail'>
@@ -54,33 +59,33 @@ const PostDetail = () => {
           buttonText="뒤로가기"
           buttonClass="back bl"
         />
-
         <div className="post-main">
-          {/* SCSS의 .post-card 구조에 맞춰 내부로 이동 */}
           <article className='post-card'>
-            <p className="post-card-category">
-              {post.category}
-            </p>
-            <h4 className="post-card-title">
-              {post.title}
-            </h4>
-            <div className="post-card-content">
-              {post.content}
-            </div>
 
-            <div className="tags">
-              <PostTag tag="tag1" />
-              <PostTag tag="tag2" />
-              <PostTag tag="tag3" />
-            </div>
+            <div className="post-card-body">
+              <p className="post-card-category">
+                {post.category}
+              </p>
+              <h4 className="post-card-title">
+                {post.title}
+              </h4>
+              <p className="post-card-content">
+                {post.content}
+              </p>
 
-            {/* 이미지가 카드 내부에 포함되는 디자인이라면 여기로 이동 */}
+              <div className="tags">
+                {(post.tags||[]).map((tag,i)=>(
+
+                <PostTag tag={tag} key={i} />
+                ))}
+              </div>
+            </div>
             <div className="img-wrap">
               <img src={post.imageUrl} alt="image" />
             </div>
           </article>
-        </div>
 
+        </div>
         <div className="btn-wrap">
           <Button
             text="게시글 삭제하기"

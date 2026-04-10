@@ -118,7 +118,7 @@ const PostAll = () => {
         <div className="btn-wrap">
           <Button 
           onClick={handlePrevPage}
-          text="<<" 
+          text="<" 
           disabled ={currentPage==1}
           className="bl"/>
           <ul>
@@ -134,7 +134,7 @@ const PostAll = () => {
           disabled ={currentPage==totalPages || totalPages==0}
 
           onClick={handleNextPage}
-          text=">>" className="bl"/>
+          text=">" className="bl"/>
         </div>
       </div>
     </section>

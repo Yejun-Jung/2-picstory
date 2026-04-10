@@ -34,13 +34,15 @@
     box-shadow: none;
     .input-field {
         caret-color: $purple;
-        color: #333;
-
+        font-size: $text-xl;
+        color: $gray-600;
+        
         &::placeholder{
             color:$gray-200;
             font-size: $text-xl;
         }
-        &.focus {
+        &:focus{
+            
             box-shadow: none;
         }
     }

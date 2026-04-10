@@ -13,20 +13,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
+
     private final PostService postService;
 
     @PostMapping
-    public PostResponse create(@RequestBody CreatePostRequest request, HttpSession session){
+    public PostResponse create(@RequestBody CreatePostRequest request, HttpSession session) {
         return postService.create(request, session);
     }
 
     @GetMapping
-    public List<PostResponse> findAll(HttpSession session){
+    public List<PostResponse> findAll(HttpSession session) {
         return postService.findMyPosts(session);
     }
-
     @GetMapping("/{id}")
     public PostResponse findById(
             @PathVariable Long id,
@@ -34,12 +34,12 @@ public class PostController {
     ){
         return  postService.findById(id, session);
     }
-
     @PatchMapping("/{id}")
     public PostResponse update(
             @PathVariable Long id,
             @RequestBody UpdatePostRequest request,
-            HttpSession session){
+            HttpSession session
+    ) {
         return postService.update(id, request, session);
     }
 
@@ -48,14 +48,16 @@ public class PostController {
             @PathVariable Long id,
             @RequestBody UpdatePostTagsRequest request,
             HttpSession session
-            ) {
+            ){
         return postService.updateTags(id, request, session);
     }
 
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable Long id,
-            HttpSession session){
+            HttpSession session
+    ) {
         postService.delete(id, session);
     }
+
 }

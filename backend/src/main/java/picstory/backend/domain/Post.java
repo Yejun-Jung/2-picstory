@@ -44,13 +44,12 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_tags",
-            joinColumns = @JoinColumn(name="post_id"),
-            inverseJoinColumns = @JoinColumn(name="tag_id")
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-
     private Set<Tag> tags = new HashSet<>();
 
     public Post(PostCategory category, String title, String content, String imageUrl, Member member) {
@@ -71,12 +70,14 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateTags(Set<Tag> tags) {
+    public void  updateTags(Set<Tag> tags){
         this.tags.clear();
-        if(tags!=null) {
+        if(tags!=null){
             this.tags.addAll(tags);
         }
         this.updatedAt=LocalDateTime.now();
     }
 
 }
+
+

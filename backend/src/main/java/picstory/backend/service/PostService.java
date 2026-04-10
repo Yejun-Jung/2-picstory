@@ -22,10 +22,10 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final TagRepository tagRepository;
     private final TagService tagService;
 
     private static final String LOGIN_MEMBER_ID = "LOGIN_MEMBER_ID";
+
 
     public List<PostResponse> findMyPosts(HttpSession session) {
         Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
@@ -58,17 +58,17 @@ public class PostService {
                 member
         );
 
-        post.updateTags(tagService.resolveOrCreateTags(memberId, request.tags()));
+        post.updateTags(tagService.resolveOrCreateTags(memberId,request.tags()));
 
-        Post savedPost = postRepository.save(post);
+        Post savePost = postRepository.save(post);
 
-        return PostResponse.from(savedPost);
+        return PostResponse.from(savePost);
     }
 
     @Transactional
     public PostResponse findById(Long id, HttpSession session) {
         if (id == null) {
-            throw new IllegalArgumentException("게시글 id를 확인해주세요");
+            throw new IllegalArgumentException("게시글 id를 확인해 주세요");
         }
 
         Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
@@ -77,7 +77,8 @@ public class PostService {
             throw new IllegalArgumentException("로그인 후 이용해 주세요");
         }
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
 
         if (!post.getMember().getId().equals(memberId)) {
             throw new IllegalArgumentException("본인이 작성한 글만 조회할 수 있습니다.");
@@ -88,8 +89,9 @@ public class PostService {
 
     @Transactional
     public PostResponse update(Long id, UpdatePostRequest request, HttpSession session) {
-        if (id == null) {
-            throw new IllegalArgumentException("게시글 id를 확인해 주세요");
+
+        if(id==null){
+            throw  new IllegalArgumentException("게시글 id를 확인해 주세요");
         }
 
         Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
@@ -106,20 +108,22 @@ public class PostService {
 
         post.update(request.category(),
                 request.title(),
-                request.content(),
-                request.imageUrl());
+                request.content(), request.imageUrl());
 
-        if (request.tags() != null) {
+        if(request.tags()!=null){
             post.updateTags(tagService.resolveOrCreateTags(memberId, request.tags()));
         }
 
         return PostResponse.from(post);
+
+
     }
 
+
     @Transactional
-    public PostResponse updateTags(Long id, UpdatePostTagsRequest request, HttpSession session) {
-        if (id == null) {
-            throw new IllegalArgumentException("게시글 id를 확인해 주세요");
+    public PostResponse updateTags(Long id, UpdatePostTagsRequest request, HttpSession session){
+        if(id==null){
+            throw  new IllegalArgumentException("게시글 id를 확인해 주세요");
         }
 
         Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
@@ -140,6 +144,10 @@ public class PostService {
 
     @Transactional
     public void delete(Long id, HttpSession session) {
+        if(id==null){
+            throw  new IllegalArgumentException("게시글 id를 확인해 주세요");
+        }
+
         Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
 
         if (memberId == null) {

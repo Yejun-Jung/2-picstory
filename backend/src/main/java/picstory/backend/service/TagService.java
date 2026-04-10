@@ -19,32 +19,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TagService {
+
     private final TagRepository tagRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    private static final String LOGIN_MEMBER_ID="LOGIN_MEMBER_ID";
-
+    private static final String LOGIN_MEMBER_ID = "LOGIN_MEMBER_ID";
 
     @Transactional
-    public TagResponse createTag(HttpSession session, String rawLabel){
-        Long memberId= (Long) session.getAttribute(LOGIN_MEMBER_ID);
+    public TagResponse createTag(HttpSession session, String rawLabel) {
+        Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
 
-        if(memberId==null){
-            throw  new IllegalArgumentException("로그인 후 이용해 주세요");
+        if (memberId == null) {
+            throw new IllegalArgumentException("로그인 후 이용해 주세요");
+
         }
-        Set<Tag> tags = resolveOrCreateTags(memberId,List.of(rawLabel));
+        Set<Tag> tags = resolveOrCreateTags(memberId, List.of(rawLabel));
 
         return tags.stream()
                 .findFirst()
                 .map(TagResponse::from)
-                .orElseThrow(()->new IllegalArgumentException("태그 생성에 실패 했습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("태그 생성에 실패 했습니다."));
     }
 
-    public List<TagResponse> findMyTags(HttpSession session){
-        Long memberId= (Long) session.getAttribute(LOGIN_MEMBER_ID);
+    public List<TagResponse> findMyTags(HttpSession session) {
+        Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
 
-        if(memberId==null){
+        if (memberId == null) {
             return List.of();
         }
 
@@ -55,43 +56,39 @@ public class TagService {
     }
 
     @Transactional
-    public void delete(HttpSession session, Long tagId){
-        Long memberId= (Long) session.getAttribute(LOGIN_MEMBER_ID);
-
-        if(memberId==null){
-            throw  new IllegalArgumentException("로그인 후 이용해 주세요");
+    public void delete(HttpSession session, Long tagId) {
+        Long memberId = (Long) session.getAttribute(LOGIN_MEMBER_ID);
+        if (memberId == null) {
+            throw new IllegalArgumentException("로그인 후 이용해 주세요");
         }
 
         Tag tag = tagRepository.findByIdAndMember_Id(tagId, memberId)
-                .orElseThrow(()->new IllegalArgumentException("tag를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("tag를 찾을 수 없습니다."));
 
-        for(Post post :postRepository.findByTags_Id(tagId)){
+        for (Post post : postRepository.findByTags_Id(tagId)) {
             post.getTags().remove(tag);
         }
         tagRepository.delete(tag);
     }
 
-
-    //정교화
-
-    private static List<String> normalizeLabels(List<String> rawLabels){
-        if(rawLabels==null){
+    private static List<String> normalizeLabels(List<String> rawLabels) {
+        if (rawLabels == null) {
             return List.of();
         }
-        Set<String>unique = new LinkedHashSet<>();
+        Set<String> unique = new LinkedHashSet<>();
 
-        for(String raw:rawLabels){
-            if(raw==null)continue;
+        for (String raw : rawLabels) {
+            if (raw == null) continue;
+
             String label = raw.trim();
 
-            if (label.startsWith("#")){
+            if (label.startsWith("#")) {
                 label = label.substring(1).trim();
             }
+            if (label.isBlank()) continue;
 
-            if (label.isBlank())continue;
-
-            if (label.length()>50){
-                throw new IllegalArgumentException("태그는 50자 이하여야합니다.");
+            if (label.length() > 50) {
+                throw new IllegalArgumentException("태그는 50자 이하여야 합니다.");
             }
             unique.add(label);
         }
@@ -99,30 +96,30 @@ public class TagService {
     }
 
     @Transactional
-    public Set<Tag> resolveOrCreateTags(Long memberId, List<String> rawLabels){
-        if(memberId ==null){
+    public Set<Tag> resolveOrCreateTags(Long memberId, List<String> rawLabels) {
+        if (memberId == null) {
             throw new IllegalArgumentException("로그인 후 이용해 주세요");
         }
 
         List<String> normalized = normalizeLabels(rawLabels);
 
-        if(normalized.isEmpty()){
-            return  new HashSet<>();
+        if (normalized.isEmpty()) {
+            return new HashSet<>();
         }
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        //DB에서 태그가 있는지 조회
         List<Tag> existingTags = tagRepository.findAllByMember_IdAndLabelIn(memberId, normalized);
 
         Map<String, Tag> existingByLabel = existingTags.stream()
-                .collect(Collectors.toMap(Tag::getLabel, t->t));
+                .collect(Collectors.toMap(Tag::getLabel, t -> t));
 
         List<Tag> toCreate = normalized.stream()
-                .filter(label->!existingByLabel.containsKey(label))
-                .map(label->new Tag(member,label))
+                .filter(label -> !existingByLabel.containsKey(label))
+                .map(label -> new Tag(member, label))
                 .toList();
-        if(!toCreate.isEmpty()){
+
+        if (!toCreate.isEmpty()) {
             tagRepository.saveAll(toCreate);
         }
 

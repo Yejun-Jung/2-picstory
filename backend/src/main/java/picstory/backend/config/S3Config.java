@@ -11,6 +11,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class S3Config {
+
     @Value("${cloud.aws.credentials.access-key:}")
     private String accessKey;
 
@@ -22,16 +23,30 @@ public class S3Config {
 
     @Bean
     public S3Presigner s3Presigner(){
-        S3Presigner.Builder builder = S3Presigner.builder()
+        S3Presigner.Builder builder= S3Presigner.builder()
                 .region(Region.of(region));
 
         if(!accessKey.isBlank() && !secretKey.isBlank()){
-            AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
+            AwsBasicCredentials credentials =
+                    AwsBasicCredentials.create(accessKey,secretKey);
 
-            builder.credentialsProvider(StaticCredentialsProvider.create(awsCreds));
-        } else {
+            builder.credentialsProvider(StaticCredentialsProvider.create(credentials));
+        }else {
             builder.credentialsProvider(DefaultCredentialsProvider.create());
         }
+
         return builder.build();
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+

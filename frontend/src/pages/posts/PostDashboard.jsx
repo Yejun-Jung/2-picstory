@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import useFilteredPosts from '../../hooks/useFilteredPosts'
 const PostDashboard = () => {
 
-    const [selectedTag, setSelectedTag] = useState('전체')
     const [searchKeyword, setSearchKeyword] = useState('')
+    const [selectedTag, setSelectedTag] = useState('전체')
     const [tags, setTags] = useState(['전체'])
 
     const [posts, setPosts] = useState([])
@@ -41,6 +41,12 @@ const PostDashboard = () => {
                 }))
 
                 setPosts(mappedPosts)
+                const uniqueTags = [
+                    '전체',
+                    ...new Set(mappedPosts.flatMap((post) => post.tags || []))
+                ]
+
+                setTags(uniqueTags)
             } catch (error) {
                 setFetchError(error?.response?.data?.message || error.message || '게시글 조회 실패')
                 setPosts([])
@@ -53,7 +59,7 @@ const PostDashboard = () => {
 
 
 
-    const filteredPosts = useFilteredPosts(posts,selectedTag,searchKeyword)
+    const filteredPosts = useFilteredPosts(posts, selectedTag, searchKeyword)
     const handleCreatePost = () => {
         console.log('새 메모 작성')
         navigate('/app/posts/new')
@@ -84,7 +90,7 @@ const PostDashboard = () => {
                     />
                     <Button text="전체 게시글 보기" className="wh" />
                 </div>
-                <PostList posts={filteredPosts.slice(0,3)} />
+                <PostList posts={filteredPosts.slice(0, 3)} />
             </div>
         </section>
     )

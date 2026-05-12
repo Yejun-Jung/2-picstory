@@ -20,24 +20,26 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/members","/members/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/members", "/members/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/api/auth/kakao", "/api/auth/kakao/callback").permitAll()
+                                .requestMatchers("/api/auth/kakao/**").permitAll()
 //                        .anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                                .anyRequest().permitAll()
                 )
-                .formLogin(form->form.disable())
+                .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
@@ -47,26 +49,15 @@ public class SecurityConfig {
                 .filter(s -> !s.isEmpty())
                 .toList();
         config.setAllowedOrigins(origins);
-        config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",config);
+        source.registerCorsConfiguration("/**", config);
 
         return source;
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
